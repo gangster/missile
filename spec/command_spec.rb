@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Missle
+module Missile
   describe Command do
     context 'abstract methods' do
       let(:command) { Command.new({}) }
@@ -12,7 +12,7 @@ module Missle
     end
     context 'subclasses' do
       let(:subclass) do
-         Class.new(Missle::Command) do
+         Class.new(Missile::Command) do
            def has_params?
              !params.nil?
            end
@@ -28,7 +28,7 @@ module Missle
         context 'when successful' do
           context 'when passing a no arguments to success!' do
             let(:subclass) do
-              Class.new(Missle::Command) do
+              Class.new(Missile::Command) do
                 def run
                   success!
                 end
@@ -41,7 +41,7 @@ module Missle
           end
           context 'when passing a single argument to success!' do
             let(:subclass) do
-              Class.new(Missle::Command) do
+              Class.new(Missile::Command) do
                 def run
                   success! "thing"
                 end
@@ -54,7 +54,7 @@ module Missle
           end
           context 'when passing multiple arguments to success!' do
             let(:subclass) do
-              Class.new(Missle::Command) do
+              Class.new(Missile::Command) do
                 def run
                   success! "thing1", "thing2"
                 end
@@ -69,7 +69,7 @@ module Missle
         context 'when failed' do
           context 'when passing a no arguments to fail!' do
             let(:subclass) do
-              Class.new(Missle::Command) do
+              Class.new(Missile::Command) do
                 def run
                   fail!
                 end
@@ -82,7 +82,7 @@ module Missle
           end
           context 'when passing a single argument to fail!' do
             let(:subclass) do
-              Class.new(Missle::Command) do
+              Class.new(Missile::Command) do
                 def run
                   fail! "thing"
                 end
@@ -95,7 +95,7 @@ module Missle
           end
           context 'when passing multiple arguments to fail!' do
             let(:subclass) do
-              Class.new(Missle::Command) do
+              Class.new(Missile::Command) do
                 def run
                   fail! "thing1", "thing2"
                 end
