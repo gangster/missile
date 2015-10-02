@@ -2,7 +2,7 @@ require 'uber/inheritable_attr'
 require 'reform'
 require 'reform/form/active_model/model_validations'
 
-module Missle
+module Missile
   module Validatable
     attr_reader :contract
     def self.included(base)
@@ -45,7 +45,7 @@ module Missle
     end
 
     # Instantiate the contract, either by using the user's contract passed into #validate
-    # or infer the Operation contract.
+    # or infer the Command contract.
     def contract_for(contract_class, *entity)
       (contract_class || self.class.contract_class).new(*entity)
     end
