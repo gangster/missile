@@ -13,6 +13,7 @@ module Missile
         self.contract_class = Reform::Form.clone
 
         self.contract_class.class_eval do
+          # TODO:  Make this constant configurable
           include Reform::Form::ActiveModel::Validations
         end
 
@@ -42,7 +43,7 @@ module Missile
     end
 
     # Instantiate the contract, either by using the user's contract passed into #validate
-    # or infer the Command contract.
+    # or infer the  contract.
     def contract_for(contract_class, *entity)
       (contract_class || self.class.contract_class).new(*entity)
     end
