@@ -32,4 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry', '~> 0'
   spec.add_development_dependency 'wisper-rspec', '~> 0.0.2'
   spec.add_dependency 'wisper', '~> 1.6.1', '>= 1.6.1'
+  spec.add_dependency 'uber'
+  spec.add_dependency 'reform'
+  spec.add_dependency 'activemodel'
 end

@@ -1,9 +1,9 @@
 require 'uber/inheritable_attr'
 require 'reform'
-require 'reform/form/active_model/model_validations'
+require "reform/form/active_model/validations"
 
 module Missile
-  module Validatable
+  module Validateable
     attr_reader :contract
     def self.included(base)
       base.instance_eval do
@@ -11,19 +11,16 @@ module Missile
         inheritable_attr :contract_class
 
         self.contract_class = Reform::Form.clone
+
         self.contract_class.class_eval do
           include Reform::Form::ActiveModel::Validations
-          def self.name # FIXME: don't use ActiveModel::Validations in Reform, it sucks.
-            # for whatever reason, validations climb up the inheritance tree and require _every_ class to have a name (4.1).
-            "Reform::Form"
-          end
         end
 
-        def contract(*contract_class, &block)
+        def self.contract(*contract_klass, &block)
           if block_given?
             self.contract_class.class_eval(&block)
           else
-            self.contract_class = contract_class[0]
+            self.contract_class = contract_klass[0]
           end
         end
       end
