@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'wepo', path: '/Users/josh/work/wepo'
+gem 'wepo', github: 'gangster/wepo'
 # Specify your gem's dependencies in missile.gemspec
 gemspec
