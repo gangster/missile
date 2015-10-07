@@ -1,35 +1,145 @@
 # Missile
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/missile`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
-## Installation
-
-Add this line to your application's Gemfile:
+## Getting Started
+In your Gemfile...
 
 ```ruby
-gem 'missile'
+gem 'missile', '~> 0.1.0'
 ```
 
-And then execute:
+## What is a Missile?
 
-    $ bundle
+A Missile is a single purpose object for encapsulating domain logic in your Ruby applications.  It represents a *single* concept/behavior in your domain.   It is a Command/Interactor hybrid with friendly and flexible APIs.   It succeeds in simplifying both model and controller code while eliminating callbacks in the former, and conditionals in the latter.  It is a service object replacement.
 
-Or install it yourself as:
+## Examples
 
-    $ gem install missile
+Model
+```ruby
+class User < ActiveRecord::Base
+  # I'm just a dumb data object.
+end
+```
 
-## Usage
+Entity (Wepo)
+```ruby
+class UserEntity < Wepo::Entity
+  property :email
+  property :password
+  property :confirmation_code
+  property :confirmed
+end
+```
+Controller
+```ruby
+class RegistrationsController < ApplicationController
+  def new
+    User::BeginRegistration.new
+      .on(:success, &method(:render_form))
+      .run
+  end
 
-TODO: Write usage instructions here
+  def create
+    Users::Create.new(params)
+      .on(:success, &method(:send_welcome_email))
+      .on(:failure, &method(:rerender))
+      .run
+  end
 
-## Development
+  private
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+  def render_form(form)
+    @form = form
+  end
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+  def send_welcome_email(user)
+    Users::SendWelcomeEmail.new(user: user)
+      .on(:success, &method(:redirect_to_user))
+      .on(:failure, &method(:report_and_redirect))
+  end
 
-## Contributing
+  def redirect_to_user(user)
+    redirect_to user_url(user)
+  end
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/missile. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+  def report_and_redirect(user)
+    # Notify bugsnag, entry, etc.
+    redirect_to_user(user)
+  end
+
+  def rerender(form, errors)
+    @form = form
+    @errors = errors
+    render :new
+  end
+end
+```
+
+Create user
+```ruby
+module Users
+  class Create < Missile::Command
+    include Missile::Validateable
+    include Missile::Persistable::Wepo
+
+    attr_reader :user
+
+    contract do
+      property :email
+      property :password
+      property :password_confirmation
+
+      validates :email, uniqueness: true
+      validates :password, presence: true, confirmation: true      
+    end
+
+    repo do
+      model User
+      entity UserEntity
+      adapter Wepo::Adapters::ActiveRecord
+    end
+
+    def run
+      validate(params, UserEntity) do |user|
+        user.confirmation_code = SecureRandom.hex
+        save entity
+        @user = entity
+        success! @user
+      end
+      self
+    end
+  end
+end
+```
+
+Welcome e-mail command
+```ruby
+module Users
+  class SendWelcomeEmail < Missile::Command
+    def run
+      UserMailer.welcome_email(user).deliver_later
+      success!
+    end
+  end
+end
+```
+
+Confirm User command
+```ruby
+module Users
+  class Confirm < Missile::Command
+    include Missile::Persistable::Wepo
+
+    attr_reader :user
+    def run
+      user = find_by(confirmation_code: params[:confirmation_code])
+      if user
+        user.confirmed = true
+        save user
+        success!(user)
+      else
+        fail!
+      self
+    end
+  end
+end
+```
