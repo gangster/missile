@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'pry'
 require 'missile'
+require 'wisper/rspec'
 require 'wisper/rspec/matchers'
 
 RSpec::configure do |config|

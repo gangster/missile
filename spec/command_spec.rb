@@ -18,7 +18,9 @@ module Missile
            end
          end
        end
+
       let(:params) { double('params') }
+
       it 'initializes with params' do
         command = subclass.new(params)
         expect(command.has_params?).to eq true
@@ -44,6 +46,7 @@ module Missile
               Class.new(Missile::Command) do
                 def run
                   success! "thing"
+                  self
                 end
               end
             end

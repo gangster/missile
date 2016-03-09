@@ -9,7 +9,20 @@ gem 'missile', '~> 0.1.0'
 
 ## What is a Missile?
 
-A Missile is a single purpose object for encapsulating domain logic in your Ruby applications.  It represents a *single* concept/behavior in your domain.   It is a Command/Interactor hybrid with friendly and flexible APIs.   It succeeds in simplifying both model and controller code while eliminating callbacks in the former, and conditionals in the latter.  It is a service object replacement.
+A Missile is a single purpose object for giving you a sane, object-oriented place to put domain logic in your Ruby applications.  It represents a *single* concept/behavior in your domain.   It is a Command/Interactor hybrid with friendly and flexible APIs.   It succeeds in simplifying both models and controllers by eliminating callbacks in the former, and conditionals in the latter.
+
+## The Problem
+
+#### tl;dr:  Rails is not object-oriented and MVC is not enough as applications grow
+
+Rails and frameworks promote Model-View-Controller as an architectural design pattern for web applications.   MVC is great, because it
+distinguishes our application into three easily understandable layers.  Models are data, Views are what users see, and Controllers sit in between and process requests, fetches/changes data, and then renders a view.   It's simple, it works, and easy enough to explain to newbies who are just getting started.   
+
+Rails takes this MVC concept and doubles down on it.  It promotes the idea that all code should go in one of these 3 layers and goes out of its way to make it easy for developers to structure their programs in this way.  As such, most Rails applications are indeed structured this way.   So what's the problem with that?
+
+According to Wikipedia, MVC it is [an architectural pattern for implementing *user interfaces*](https://en.wikipedia.org/wiki/Model–view–controller).   Let's break that down.   First, it's an architectural pattern.   By definition, architectural patterns are high-level, broad in scope and are merely a mental framework for thinking and communicating about a problem.   They have very little to say about application design, and nothing at all to say about the implementation details.  If I were to abuse a building construction metaphor, I'd say that architectural patterns are not blueprints, or even close.  They are simply having the shared idea that buildings should in most cases have a foundation, floor, walls, 
+
+Our applications are more than user interfaces.  Our applications are a combination of user interfaces, domain logic, and data.  
 
 ## Examples
 
