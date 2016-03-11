@@ -27,6 +27,17 @@ module Missile
         @repo ||= self.class.repo_class.new(::Wepo::Adapters::ActiveRecord)
       end
 
+      def method_missing(method, *args, &block)
+        if repo.respond_to? method
+          repo.send method, *args, &block
+        else
+          super
+        end
+      end
+
+      def respond_to_missing?(method, *)
+        repo.respond_to?(method) || super
+      end
     end
   end
 end
