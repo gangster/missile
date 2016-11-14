@@ -33,7 +33,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'wisper-rspec', '~> 0.0.2'
   spec.add_dependency 'wisper', '~> 2.0.0.rc1'
   spec.add_dependency 'uber'
-  spec.add_dependency 'reform', '~> 2.0.0'
+  spec.add_dependency 'reform', '~> 2.2.0'
+  spec.add_dependency 'reform-rails'
+  spec.add_dependency 'dry-validation'
   spec.add_dependency 'activemodel'
   spec.add_dependency 'wepo'
 end
