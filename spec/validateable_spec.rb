@@ -6,7 +6,6 @@ module Missile
       { contract_class: form_class, model: model }
     end
 
-
     describe '.contract' do
       context 'when passing contract class' do
         let!(:form_class) { Class.new(Reform::Form) }
@@ -77,7 +76,7 @@ module Missile
           let(:command) { command_class.new }
           subject { command.call(params) }
           it 'adds a ContractClassRequiredException message to the errors collection' do
-            expect(subject.errors[:base].first).to eq "contract_class is required for validations.  Either pass it as a dependency in the constructor or #inject it when building the command object"
+            expect(subject.errors[:base].first).to eq 'contract_class is required for validations.  Either pass it as a dependency in the constructor or #inject it when building the command object'
           end
         end
 
@@ -85,7 +84,7 @@ module Missile
           let(:command) { command_class.new(dependencies: { contract_class: form_class }) }
           subject { command.call(params) }
           it 'adds a ModelRequiredExeption message to the errors collection' do
-            expect(subject.errors[:base].first).to eq "model is required for validations.  Either pass it as a dependency in the constructor or #inject it when building the command object"
+            expect(subject.errors[:base].first).to eq 'model is required for validations.  Either pass it as a dependency in the constructor or #inject it when building the command object'
           end
         end
       end
@@ -110,11 +109,10 @@ module Missile
         it 'yields the model' do
           expect { |b| command.validate(params, &b) }.to yield_with_args(model)
         end
-
       end
 
       context 'when failure' do
-        let(:contract_errors) { double(:contract_errors, messages: { name: ["can't be blank"]}) }
+        let(:contract_errors) { double(:contract_errors, messages: { name: ["can't be blank"] }) }
 
         before do
           allow(form).to receive(:validate).with(params).and_return(false)

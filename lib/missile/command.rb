@@ -25,7 +25,7 @@ module Missile
       end
 
       begin
-        @value = self.run(*args)
+        @value = run(*args)
       rescue => e
         errors.add(:base, e.message)
       end
@@ -43,6 +43,10 @@ module Missile
       end
 
       self
+    end
+
+    def and_return
+      value
     end
 
     def before(&block)
@@ -89,5 +93,9 @@ module Missile
     def inject_dependencies
       @dependencies.each { |method, dep| inject(method, dep) }
     end
+
+    private
+
+    attr_reader :befores, :afters
   end
 end

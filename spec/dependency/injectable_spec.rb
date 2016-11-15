@@ -19,7 +19,7 @@ describe Missile::Dependency::Injectable do
     context 'when injecting dependencies' do
       let(:command) { command_class.new({}) }
       let(:dependency) { double('bar') }
-      let!(:injection ) { command.inject(:foo, dependency) }
+      let!(:injection) { command.inject(:foo, dependency) }
 
       it 'returns self' do
         expect(injection).to eq command

@@ -1,6 +1,6 @@
 require 'uber/inheritable_attr'
 require 'reform'
-require "reform/form/active_model/validations"
+require 'reform/form/active_model/validations'
 require 'reform/form/dry'
 
 module Missile
@@ -16,7 +16,7 @@ module Missile
 
           def self.contract(*contract_klass, &block)
             if block_given?
-              self.contract_class.class_eval(&block)
+              contract_class.class_eval(&block)
             else
               self.contract_class = contract_klass[0]
             end

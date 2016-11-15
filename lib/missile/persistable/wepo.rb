@@ -15,7 +15,7 @@ module Missile
 
           def self.repo(*args, &block)
             if block_given?
-              self.repo_class.class_eval(&block)
+              repo_class.class_eval(&block)
             else
               self.repo_class = args[0]
             end

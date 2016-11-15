@@ -24,7 +24,6 @@ describe Missile::Persistable::Wepo do
     end
 
     context 'when configuring with class' do
-
       let(:repo_class) do
         model_class = double(:model_class)
         entity_class = double(:entity_class)
@@ -42,7 +41,6 @@ describe Missile::Persistable::Wepo do
           repo RepoClass
         end
       end
-
 
       let(:command) { command_class.new({}) }
 
