@@ -8,39 +8,31 @@ module Missile
 
     def initialize(dependencies: {})
       @value = nil
-      @errors = Missile::Errors.new
+      @errors ||= Errors.new
       @befores = []
       @afters = []
       @dependencies = dependencies
       inject_dependencies if dependencies
     end
 
-    attr_reader :dependencies, :value, :errors
+    attr_reader :dependencies, :value
 
     def call(*args)
-      errors.empty!
+      errors = {}
 
-      @befores.each do |callback|
-        callback.call(*args)
-      end
+      befores.each { |callback| callback.call(*args) }
 
-      begin
-        @value = run(*args)
-      rescue => e
-        errors.add(:base, e.message)
-      end
+      value = run(*args)
 
-      if @value && @errors.empty?
-        success!(self)
+      if value && errors.empty?
+        broadcast(:success, self)
       else
-        error!(self)
+        broadcast(:error, self)
       end
 
-      done!(self)
+      broadcast(:done, self)
 
-      @afters.each do |callback|
-        callback.call(*args)
-      end
+      afters.each { |callback| callback.call(*args) }
 
       self
     end
@@ -50,12 +42,12 @@ module Missile
     end
 
     def before(&block)
-      @befores << block
+      befores << block
       self
     end
 
     def after(&block)
-      @afters << block
+      afters << block
       self
     end
 
@@ -71,27 +63,31 @@ module Missile
       on(:done, &block)
     end
 
+    def errors(*args)
+      if args.first
+        @errors.to_h
+      else
+        @errors[self.class.name]
+      end
+    end
+
     protected
 
-    def success!(command)
-      broadcast(:success, command)
-    end
-
-    def error!(command)
-      broadcast(:error, command)
-    end
-
-    def done!(command)
-      broadcast(:done, command)
-    end
-
-    # Deprecated in favor of #error!
-    def fail!(command)
-      broadcast(:failure, command)
-    end
+    attr_writer :value
 
     def inject_dependencies
-      @dependencies.each { |method, dep| inject(method, dep) }
+      dependencies.each { |method, dep| inject(method, dep) }
+    end
+
+    def error!(*args)
+      if args.size == 1
+        key = :base
+      else
+        key = args.first
+      end
+      message = args.last
+      @errors.add(self.class.name, key, message)
+      broadcast(:error, self)
     end
 
     private

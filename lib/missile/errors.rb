@@ -1,44 +1,19 @@
 module Missile
   class Errors
+
+    attr_reader :errors
+
     def initialize(*)
       @errors = {}
     end
 
-    module Merge
-      def merge!(errors, prefix)
-        errors.messages.each do |field, msgs|
-          unless field.to_sym == :base
-            field = (prefix + [field]).join('.').to_sym # TODO: why is that a symbol in Rails?
-          end
-
-          msgs.each do |msg|
-            next if messages[field] && messages[field].include?(msg)
-            add(field, msg)
-          end # Forms now contains a plain errors hash. the errors for each item are still available in item.errors.
-        end
+    def add(class_name, field = :base, message)
+      if class_name.nil? || field.nil? || message.nil?
+        raise ArgumentError
       end
-
-      def to_s
-        messages.inspect
-      end
-    end
-    include Merge
-
-    def add(field, message)
-      @errors[field] ||= []
-      @errors[field] << message
-    end
-
-    def add_all(messages)
-      messages.each do |field, messages|
-        messages.each do |message|
-          add field, message
-        end
-      end
-    end
-
-    def messages
-      @errors
+      @errors[class_name] ||= {}
+      @errors[class_name][field] ||= []
+      @errors[class_name][field] << message
     end
 
     def empty?
@@ -52,6 +27,10 @@ module Missile
     # needed by Rails form builder.
     def [](name)
       @errors[name] || []
+    end
+
+    def to_h
+      @errors
     end
   end
 end

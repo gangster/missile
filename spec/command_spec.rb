@@ -8,14 +8,7 @@ module Missile
         end
       end
 
-      let!(:dependencies) { double('dependencies', each: true) }
-
-      before do
-        allow(dependencies)
-          .to receive(:[])
-          .with(:dependencies)
-          .and_return nil
-      end
+      let!(:dependencies) { {} }
 
       it 'initializes with dependencies' do
         command = subclass.new(dependencies: dependencies)
@@ -43,13 +36,17 @@ module Missile
         end
         context 'when error' do
           let(:subclass) do
-            Class.new(Missile::Command) do
-              def run
-                # 😦
-                errors.add(base: ['Fail!'])
+            Object.const_set(
+              'FooCommand',
+              Class.new(Missile::Command) do
+                def run
+                  error!('Something bad happened!')
+                end
               end
-            end
+            )
+            FooCommand
           end
+          
           it 'emits the error event' do
             expect { subject }.to broadcast(:error, command)
           end
@@ -180,6 +177,49 @@ module Missile
 
         it 'adds a listener' do
           expect { subject }.to change { command.listeners.size }.from(0).to(1)
+        end
+      end
+
+      describe '#errors' do
+        let(:subclass) do
+          Class.new(Missile::Command) do
+            def run
+            end
+          end
+        end
+
+        let(:command) { subclass.new }
+        let(:errors) { Errors.new }
+        subject { command.errors }
+
+        context 'when no arguments are passed' do
+          it 'returns the errors collection' do
+            expect(subject).to eq []
+          end
+        end
+      end
+
+      describe '#error' do
+        let(:subclass) do
+          Object.const_set(
+            'FooCommand',
+            Class.new(Missile::Command) do
+              def run
+                error!('Something bad happened!')
+              end
+            end
+          )
+          FooCommand
+        end
+
+        let(:command) { subclass.new }
+
+        before do
+          command.call
+        end
+
+        it 'adds the error to the collection' do
+          expect(command.errors).to eq({ base: ['Something bad happened!'] })
         end
       end
     end

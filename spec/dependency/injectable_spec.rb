@@ -28,7 +28,7 @@ describe Missile::Dependency::Injectable do
       context 'when inspecting the dependencies hash' do
         subject { command.dependencies }
         it 'adds the dependency to the dependencies hash' do
-          expect(subject).to eq(foo: dependency)
+          expect(subject).to include(foo: dependency)
         end
       end
 
