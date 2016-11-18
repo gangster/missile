@@ -46,7 +46,7 @@ module Missile
             )
             FooCommand
           end
-          
+
           it 'emits the error event' do
             expect { subject }.to broadcast(:error, command)
           end
@@ -190,11 +190,11 @@ module Missile
 
         let(:command) { subclass.new }
         let(:errors) { Errors.new }
-        subject { command.errors }
+        subject { command.errors.to_h }
 
         context 'when no arguments are passed' do
           it 'returns the errors collection' do
-            expect(subject).to eq []
+            expect(subject).to eq({})
           end
         end
       end
@@ -219,7 +219,7 @@ module Missile
         end
 
         it 'adds the error to the collection' do
-          expect(command.errors).to eq({ base: ['Something bad happened!'] })
+          expect(command.errors.to_h).to eq(base: ['Something bad happened!'])
         end
       end
     end

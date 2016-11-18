@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Missile::Dependency::Injectable do
-  describe '.inject' do
+  describe '#inject' do
     let(:command_class) do
       Class.new(Missile::Command)
     end

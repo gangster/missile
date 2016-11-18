@@ -22,7 +22,7 @@ module Missile
 
       befores.each { |callback| callback.call(*args) }
 
-      value = run(*args)
+      self.value = run(*args)
 
       if value && errors.empty?
         broadcast(:success, self)
@@ -63,12 +63,9 @@ module Missile
       on(:done, &block)
     end
 
-    def errors(*args)
-      if args.first
-        @errors.to_h
-      else
-        @errors[self.class.name]
-      end
+
+    def errors
+      @errors[self.class.name]
     end
 
     protected

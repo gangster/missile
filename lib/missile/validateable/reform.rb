@@ -25,22 +25,22 @@ module Missile
         end
       end
 
-      def validate(params)
+      def validate(params, &block)
         raise ContractClassRequiredException unless respond_to?(:contract_class)
         raise ModelRequiredException unless respond_to?(:model)
 
         @contract = contract_for(contract_class, model)
         if validate_contract(params)
           contract.sync
-          yield model if block_given?
+          return block.call if block
         else
           contract.errors.messages.each do |field, messages|
             messages.each do |message|
               error! field, message
             end
           end
+          nil
         end
-        self
       end
 
       def valid?

@@ -112,10 +112,6 @@ module Missile
             command.validate(params)
             expect(form).to have_received(:validate).with(params)
           end
-
-          it 'yields the model' do
-            expect { |b| command.validate(params, &b) }.to yield_with_args(model)
-          end
         end
 
         context 'when failure' do

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 module Missile
   describe Errors do
+    let(:errors) { Errors.new }
     describe '#initialize' do
       subject { Errors.new.errors }
       it 'initializes an empty errors hash' do
@@ -10,9 +11,7 @@ module Missile
     end
 
     describe '#add' do
-      let(:errors) { Errors.new }
       context 'with valid arguments' do
-
         before do
           errors.add('SomeClass', :name, 'is required')
           errors.add('SomeClass', :name, 'is stupid')
@@ -57,18 +56,36 @@ module Missile
     end
 
     describe 'empty?' do
-      it
+      subject { errors.empty? }
+      context 'when no errors are present' do
+        it 'is true' do
+          expect(subject).to eq true
+        end
+      end
+
+      context 'when errors are present' do
+        before do
+          errors.add('SomeClass', :name, 'is required')
+        end
+        it 'is false' do
+          expect(subject).to eq false
+        end
+      end
     end
 
     describe 'empty!' do
-      it
+      before do
+        errors.add('SomeClass', :name, 'is required')
+      end
+
+      it 'clears the error hash' do
+        expect(errors.empty?).to eq false
+        errors.empty!
+        expect(errors.empty?).to eq true
+      end
     end
 
     describe '[]' do
-      it
-    end
-
-    describe '#to_h' do
       it
     end
   end

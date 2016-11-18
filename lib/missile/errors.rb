@@ -1,10 +1,13 @@
 module Missile
   class Errors
-
     attr_reader :errors
 
-    def initialize(*)
-      @errors = {}
+    def initialize(*args)
+      if args[0]
+        @errors = args[0]
+      else
+        @errors = {}
+      end
     end
 
     def add(class_name, field = :base, message)
@@ -24,13 +27,12 @@ module Missile
       @errors = {}
     end
 
-    # needed by Rails form builder.
-    def [](name)
-      @errors[name] || []
-    end
-
     def to_h
       @errors
+    end
+    
+    def [](name)
+      @errors[name] || []
     end
   end
 end
