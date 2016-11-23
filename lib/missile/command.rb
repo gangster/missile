@@ -85,6 +85,7 @@ module Missile
       message = args.last
       @errors.add(self.class.name, key, message)
       broadcast(:error, self)
+      nil
     end
 
     private
