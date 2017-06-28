@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 0.45.0'
   spec.add_dependency 'wisper', '~> 2.0.0.rc1'
   spec.add_dependency 'uber'
-  spec.add_dependency 'reform', '~> 2.2.0'
+  spec.add_dependency 'reform', '~> 2.3.0'
   spec.add_dependency 'reform-rails'
   spec.add_dependency 'dry-validation'
   spec.add_dependency 'activemodel'
